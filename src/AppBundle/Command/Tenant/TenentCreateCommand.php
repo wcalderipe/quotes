@@ -35,7 +35,7 @@ class TenentCreateCommand extends ContainerAwareCommand
         $tenant = new Tenant();
         $tenant
             ->setName($input->getArgument('name'))
-            ->setSubdomain($input->getArgument('name'))
+            ->setSubdomain($input->getArgument('subdomain'))
         ;
 
         /* @var EntityManager $em */
