@@ -5,7 +5,7 @@ parameters:
 
 services:
     listener.requestresponse:
-        class: AppBundle\EventListener\SubdomainListener
+        class: AppBundle\EventListener\Subdomain\SubdomainListener
         arguments: [ @service_container ]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\EventListener;
+namespace AppBundle\EventListener\Subdomain;
 
 use AppBundle\Entity\Tenant;
 use AppBundle\Exception\Tenant\TenantNotFoundException;
@@ -22,7 +22,8 @@ class SubdomainListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request   = $event->getRequest();
-        $subdomain = $this->parseSubdomain($request);
+        $parser    = new RequestParser($request);
+        $subdomain = $parser->getSubdomain();
 
         if (null === $subdomain) {
             $this->container->tenant = null;
@@ -31,16 +32,6 @@ class SubdomainListener
 
         $tenant = $this->findTenantOrThrowException($subdomain);
         $this->attachTenantToContainer($tenant);
-    }
-
-    private function parseSubdomain($request)
-    {
-    	$host    = $request->server->get('HTTP_HOST');
-        $regex   = '/(?:http[s]*\\:\\/\\/)*(.*?)\\.(?=[^\\/]*\\..{2,5})/i';
-        $matches = null;
-        preg_match($regex, $host, $matches);
-
-        return empty($matches) ? null : $matches[1];
     }
 
     private function findTenantOrThrowException($subdomain)
